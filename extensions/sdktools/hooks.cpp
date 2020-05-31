@@ -186,7 +186,7 @@ void CHookManager::PlayerRunCmdHook(int client, bool post)
 		hookid = SH_ADD_MANUALVPHOOK(PlayerRunCmdHook, pEntity, SH_MEMBER(this, &CHookManager::PlayerRunCmd), false);
 
 	hook.SetHookID(hookid);
-	runUserCmdHookVec.push_back(new CVTableHook(hook));
+	runUserCmdHookVec.push_back(new CVTableHook(std::move(hook)));
 }
 
 void CHookManager::PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
@@ -338,7 +338,7 @@ void CHookManager::NetChannelHook(int client)
 
 			int hookid = SH_ADD_VPHOOK(IBaseFileSystem, FileExists, basefilesystem, SH_MEMBER(this, &CHookManager::FileExists), false);
 			filehook.SetHookID(hookid);
-			m_netChannelHooks.push_back(new CVTableHook(filehook));
+			m_netChannelHooks.push_back(new CVTableHook(std::move(filehook)));
 		}
 
 		for (iter = 0; iter < m_netChannelHooks.size(); ++iter)
@@ -353,15 +353,15 @@ void CHookManager::NetChannelHook(int client)
 		{
 			int hookid = SH_ADD_VPHOOK(INetChannel, SendFile, pNetChannel, SH_MEMBER(this, &CHookManager::SendFile), false);
 			nethook.SetHookID(hookid);
-			m_netChannelHooks.push_back(new CVTableHook(nethook));
+			m_netChannelHooks.push_back(new CVTableHook(std::move(nethook)));
 			
 			hookid = SH_ADD_VPHOOK(INetChannel, ProcessPacket, pNetChannel, SH_MEMBER(this, &CHookManager::ProcessPacket), false);
 			nethook.SetHookID(hookid);
-			m_netChannelHooks.push_back(new CVTableHook(nethook));
+			m_netChannelHooks.push_back(new CVTableHook(std::move(nethook)));
 			
 			hookid = SH_ADD_VPHOOK(INetChannel, ProcessPacket, pNetChannel, SH_MEMBER(this, &CHookManager::ProcessPacket_Post), true);
 			nethook.SetHookID(hookid);
-			m_netChannelHooks.push_back(new CVTableHook(nethook));
+			m_netChannelHooks.push_back(new CVTableHook(std::move(nethook)));
 		}
 	}
 }

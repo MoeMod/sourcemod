@@ -737,7 +737,7 @@ HookReturn SDKHooks::Hook(int entity, SDKHookType type, IPluginFunction *callbac
 		vhook.SetHookID(hookid);
 
 		CVTableList *vtablelist = new CVTableList;
-		vtablelist->vtablehook = new CVTableHook(vhook);
+		vtablelist->vtablehook = new CVTableHook(std::move(vhook));
 		vtablehooklist.push_back(vtablelist);
 	}
 	

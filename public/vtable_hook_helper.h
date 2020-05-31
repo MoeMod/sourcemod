@@ -35,7 +35,7 @@
 class CVTableHook
 {
 public:
-	CVTableHook(void *takenclass)
+	explicit CVTableHook(void *takenclass)
 	{
 		this->vtableptr = *reinterpret_cast<void ***>(takenclass);
 		this->hookid = 0;
@@ -47,7 +47,9 @@ public:
 		this->hookid = hook;
 	}
 
-	CVTableHook(CVTableHook &other)
+	CVTableHook(const CVTableHook &other) = delete;
+
+	CVTableHook(CVTableHook &&other)
 	{
 		this->vtableptr = other.vtableptr;
 		this->hookid = other.hookid;
@@ -55,13 +57,7 @@ public:
 		other.hookid = 0;
 	}
 
-	CVTableHook(CVTableHook *other)
-	{
-		this->vtableptr = other->vtableptr;
-		this->hookid = other->hookid;
-
-		other->hookid = 0;
-	}
+	[[deprecated]] CVTableHook(CVTableHook *other) : CVTableHook(std::move(*other)) {}
 
 	~CVTableHook()
 	{
@@ -72,7 +68,7 @@ public:
 		}
 	}
 public:
-	void *GetVTablePtr(void)
+	void *GetVTablePtr(void) const
 	{
 		return this->vtableptr;
 	}
@@ -82,27 +78,27 @@ public:
 		this->hookid = hook;
 	}
 
-	bool IsHooked(void)
+	bool IsHooked(void) const
 	{
 		return (this->hookid != 0);
 	}
 public:
-	bool operator == (CVTableHook &other)
+	bool operator == (const CVTableHook &other) const
 	{
 		return (this->GetVTablePtr() == other.GetVTablePtr());
 	}
 
-	bool operator == (CVTableHook *other)
+	[[deprecated]] bool operator == (CVTableHook *other)
 	{
 		return (this->GetVTablePtr() == other->GetVTablePtr());
 	}
 
-	bool operator != (CVTableHook &other)
+	bool operator != (const CVTableHook &other) const
 	{
 		return (this->GetVTablePtr() != other.GetVTablePtr());
 	}
 
-	bool operator != (CVTableHook *other)
+	[[deprecated]] bool operator != (CVTableHook *other)
 	{
 		return (this->GetVTablePtr() != other->GetVTablePtr());
 	}
